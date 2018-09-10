@@ -12,23 +12,7 @@ import java.util.regex.Pattern;
 
 import static java.util.stream.Collectors.toList;
 
-/**
- * Created with IntelliJ IDEA
- *
- * @Author yuanhaoyue swithaoy@gmail.com
- * @Description
- * @Date 2018-09-06
- * @Time 20:44
- */
 public class WC {
-    /*
-        wc.exe -c C:\Users\Administrator\Desktop\typical.txt
-        wc.exe -w C:\Users\Administrator\Desktop\typical.txt
-        wc.exe -l C:\Users\Administrator\Desktop\typical.txt
-        wc.exe -s -c C:\Users\Administrator\Desktop\typi*ca?.txt
-        wc.exe -a C:\Users\Administrator\Desktop\typical.txt
-     */
-
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
         while (scan.hasNextLine()) {
@@ -36,35 +20,31 @@ public class WC {
             if ("wc.exe".equals(commandArray[0])) {
                 processFile(commandArray);
             } else {
-                System.out.println("é”™è¯¯å‘½ä»¤ï¼");
+                System.out.println("´íÎóÃüÁî£¡");
             }
         }
     }
 
-    /**
-     * å‘½ä»¤å¤„ç†
-     *
-     * @param command è¾“å…¥å‘½ä»¤
-     */
+    // ÃüÁî´¦Àí
     static void processFile(String[] command) {
         if ("-s".equals(command[1])) {
             processDirectory(command);
             return;
         }
         if (command.length > 3) {
-            System.out.println("é”™è¯¯å‘½ä»¤ï¼");
+            System.out.println("´íÎóÃüÁî£¡");
             return;
         }
         if ("-c".equals(command[1])) {
             calculate(command[2], (BufferedReader reader) ->
-                    System.out.println("å­—ç¬¦æ•°ï¼š" + reader.lines()
+                    System.out.println("×Ö·ûÊı£º" + reader.lines()
                             .map(s -> s.replaceAll(" ", ""))
                             .mapToInt(String::length)
                             .sum())
             );
         } else if ("-w".equals(command[1])) {
             calculate(command[2], (BufferedReader reader) ->
-                    System.out.println("å•è¯æ•°ï¼š" + reader.lines()
+                    System.out.println("µ¥´ÊÊı£º" + reader.lines()
                             .map(s -> s.split("\\W+"))
                             .flatMap(Arrays::stream)
                             .filter(s -> !s.isEmpty())
@@ -72,52 +52,49 @@ public class WC {
             );
         } else if ("-l".equals(command[1])) {
             calculate(command[2], (BufferedReader reader) ->
-                    System.out.println("è¡Œæ•°ï¼š" + reader.lines().count()));
+                    System.out.println("ĞĞÊı£º" + reader.lines().count()));
         } else if ("-a".equals(command[1])) {
             calculate(command[2], (BufferedReader reader) ->
-                    System.out.println("ç©ºè¡Œæ•°ï¼š" + reader.lines()
-                            //æ­£åˆ™ç­›é€‰ç©ºç™½å­—ç¬¦
+                    System.out.println("¿ÕĞĞÊı£º" + reader.lines()
+                            //ÕıÔòÉ¸Ñ¡¿Õ°××Ö·û
                             .filter(s -> s.matches("\\s+") || s.length() <= 1)
                             .count())
             );
             calculate(command[2], (BufferedReader reader) ->
-                    System.out.println("ä»£ç è¡Œæ•°ï¼š" + reader.lines()
-                            //æ­£åˆ™ç­›é€‰ç©ºç™½å­—ç¬¦
+                    System.out.println("´úÂëĞĞÊı£º" + reader.lines()
+                            //ÕıÔòÉ¸Ñ¡¿Õ°××Ö·û
                             .filter(s -> !s.contains("//") && !s.matches("\\s+") && s.length() > 1)
                             .count())
             );
             calculate(command[2], (BufferedReader reader) ->
-                    System.out.println("æ³¨é‡Šè¡Œæ•°ï¼š" + reader.lines()
+                    System.out.println("×¢ÊÍĞĞÊı£º" + reader.lines()
                             .filter(s -> s.contains("//"))
                             .count())
             );
         } else {
-            System.out.println("é”™è¯¯å‘½ä»¤ï¼");
+            System.out.println("´íÎóÃüÁî£¡");
         }
     }
 
-    /**
-     * å¤„ç† -s å‘½ä»¤
-     *
-     * @param command è¾“å…¥å‘½ä»¤
-     */
+
+    // ´¦Àí -s ÃüÁî
     private static void processDirectory(String[] command) {
         if (command.length < 4) {
-            System.out.println("é”™è¯¯å‘½ä»¤ï¼");
+            System.out.println("´íÎóÃüÁî£¡");
             return;
         }
         String address = command[3];
-        //è·å¾—é€šé…ç¬¦æ–‡ä»¶å
+        //»ñµÃÍ¨Åä·ûÎÄ¼şÃû
         String fileName = address.substring(address.lastIndexOf("\\") + 1);
-        //è·å¾—ç›®å½•
+        //»ñµÃÄ¿Â¼
         File file = new File(address.substring(0, address.lastIndexOf("\\")));
-        //åŒ¹é…é€šé…ç¬¦
+        //Æ¥ÅäÍ¨Åä·û
         Pattern p = Pattern.compile(fileName.replace(".", "\\.")
                 .replace("*", ".*")
                 .replace("?", ".?"));
-        //å¯»æ‰¾å½“å‰ç›®å½•ä»¥åŠå­ç›®å½•çš„æ‰€æœ‰æ–‡ä»¶
+        //Ñ°ÕÒµ±Ç°Ä¿Â¼ÒÔ¼°×ÓÄ¿Â¼µÄËùÓĞÎÄ¼ş
         List<String> filePaths = getAllFilePaths(file, new ArrayList<>());
-        //è¿‡æ»¤å‡ºç›®æ ‡æ–‡ä»¶
+        //¹ıÂË³öÄ¿±êÎÄ¼ş
         filePaths = filePaths.stream()
                 .filter(f -> p.matcher(f.substring(f.lastIndexOf("\\") + 1)).matches())
                 .collect(toList());
@@ -127,31 +104,19 @@ public class WC {
                 processFile(new String[]{"", command[2], filePath});
             }
         } else {
-            System.out.println("ç¬¦åˆæ¡ä»¶çš„æ–‡ä»¶ä¸å­˜åœ¨ï¼");
+            System.out.println("·ûºÏÌõ¼şµÄÎÄ¼ş²»´æÔÚ£¡");
         }
     }
 
-    /**
-     * æ ¹æ®ProcessFileçš„å®ç°è¿›è¡Œæ•°å€¼è®¡ç®—
-     *
-     * @param fileAddress æ–‡ä»¶è·¯å¾„
-     * @param processFile ProcessFile å‡½æ•°
-     */
     private static void calculate(String fileAddress, ProcessFile processFile) {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(fileAddress));
             processFile.process(reader);
         } catch (FileNotFoundException e) {
-            System.out.println("æ‰¾ä¸åˆ°æŒ‡å®šçš„æ–‡ä»¶!");
+            System.out.println("ÕÒ²»µ½Ö¸¶¨µÄÎÄ¼ş!");
         }
     }
 
-    /**
-     * è·å¾—å½“å‰ç›®å½•ä¸å­ç›®å½•çš„æ–‡ä»¶è·¯å¾„
-     *
-     * @param filePath  å½“å‰ç›®å½•
-     * @param filePaths æ–‡ä»¶è·¯å¾„list
-     */
     private static List<String> getAllFilePaths(File filePath, List<String> filePaths) {
         File[] files = filePath.listFiles();
         if (files == null) {
